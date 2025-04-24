@@ -1,0 +1,93 @@
+db@db-VirtualBox:~$ mysql -u root -p Друзья\ человека
+Enter password: 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 55
+Server version: 8.0.37-0ubuntu0.24.04.1 (Ubuntu)
+
+mysql> -- Создаем таблицу "молодые животные"
+mysql> CREATE TABLE `молодые животные` AS
+    -> SELECT *, 
+    -> TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()) AS возраст_в_месяцах,
+    -> CONCAT(
+    ->   FLOOR(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()) / 12), ' года ',
+    ->   MOD(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()), 12), ' мес.'
+    -> ) AS возраст
+    -> FROM `Домашние животные`
+    -> WHERE TIMESTAMPDIFF(YEAR, дата_рождения, CURDATE()) BETWEEN 1 AND 3
+    -> UNION ALL
+    -> SELECT *,
+    -> TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()) AS возраст_в_месяцах,
+    -> CONCAT(
+    ->   FLOOR(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()) / 12), ' года ',
+    ->   MOD(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()), 12), ' мес.'
+    -> ) AS возраст
+    -> FROM `Лошади и ослы`
+    -> WHERE TIMESTAMPDIFF(YEAR, дата_рождения, CURDATE()) BETWEEN 1 AND 3;
+Query OK, 3 rows affected (0.04 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM `молодые животные`;
++----+--------+--------+-------------------+---------------+-------------------+--------------+
+| id | имя    | вид    | команды           | дата_рождения | возраст_в_месяцах | возраст      |
++----+--------+--------+-------------------+---------------+-------------------+--------------+
+|  2 | Мурка  | Кошка  | Кис-кис           | 2021-02-28    |                41 | 3 года 5 мес.|
+|  3 | Хома   | Хомяк  | NULL              | 2023-07-10    |                11 | 0 года 11 мес.|
+|  3 | Упрямец| Осел   | NULL              | 2022-01-18    |                29 | 2 года 5 мес.|
++----+--------+--------+-------------------+---------------+-------------------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> -- Создаем объединенную таблицу
+mysql> CREATE TABLE `все животные` (
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> имя VARCHAR(30) NOT NULL,
+    -> вид VARCHAR(30) NOT NULL,
+    -> команды VARCHAR(100),
+    -> дата_рождения DATE,
+    -> возраст_в_месяцах INT,
+    -> возраст VARCHAR(50),
+    -> исходная_таблица VARCHAR(30) NOT NULL
+    -> ;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> -- Заполняем объединенную таблицу данными
+mysql> INSERT INTO `все животные` 
+    -> (имя, вид, команды, дата_рождения, возраст_в_месяцах, возраст, исходная_таблица)
+    -> SELECT имя, вид, команды, дата_рождения, 
+    ->        TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()),
+    ->        CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()) / 12), ' года ',
+    ->               MOD(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()), 12), ' мес.'),
+    ->        'Домашние животные'
+    -> FROM `Домашние животные`;
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO `все животные` 
+    -> (имя, вид, команды, дата_рождения, возраст_в_месяцах, возраст, исходная_таблица)
+    -> SELECT имя, вид, команды, дата_рождения,
+    ->        TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()),
+    ->        CONCAT(FLOOR(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()) / 12), ' года ',
+    ->               MOD(TIMESTAMPDIFF(MONTH, дата_рождения, CURDATE()), 12), ' мес.'),
+    ->        'Лошади и ослы'
+    -> FROM `Лошади и ослы`;
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> -- Проверяем результат
+mysql> SELECT * FROM `все животные`;
++----+----------+-----------+--------------------------+---------------+-------------------+--------------+-------------------+
+| id | имя      | вид       | команды                  | дата_рождения | возраст_в_месяцах | возраст      | исходная_таблица  |
++----+----------+-----------+--------------------------+---------------+-------------------+--------------+-------------------+
+|  1 | Бобик    | Собака    | Сидеть, Лежать, Голос    | 2020-05-15    |                49 | 4 года 1 мес.| Домашние животные |
+|  2 | Мурка    | Кошка     | Кис-кис                  | 2021-02-28    |                41 | 3 года 5 мес.| Домашние животные |
+|  3 | Хома     | Хомяк     | NULL                     | 2023-07-10    |                11 | 0 года 11 мес.| Домашние животные |
+|  4 | Буян     | Лошадь    | Шагом, Рысью, Галопом    | 2018-04-22    |                73 | 6 года 1 мес.| Лошади и ослы     |
+|  5 | Упрямец  | Осел      | NULL                     | 2022-01-18    |                29 | 2 года 5 мес.| Лошади и ослы     |
++----+----------+-----------+--------------------------+---------------+-------------------+--------------+-------------------+
+5 rows in set (0.00 sec)
+
+mysql> exit
+Bye
+db@db-VirtualBox:~$ 
