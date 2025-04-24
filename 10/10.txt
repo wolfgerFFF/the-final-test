@@ -1,0 +1,58 @@
+db@db-VirtualBox:~$ mysql -u root -p Друзья\ человека
+Enter password: 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 52
+Server version: 8.0.37-0ubuntu0.24.04.1 (Ubuntu)
+
+mysql> -- Удаляем верблюдов из таблицы Вьючные животные
+mysql> DELETE FROM `Вьючные животные` WHERE вид = 'Верблюд';
+Query OK, 1 row affected (0.01 sec)
+
+mysql> -- Создаем новую таблицу для лошадей и ослов
+mysql> CREATE TABLE `Лошади и ослы` (
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> имя VARCHAR(30) NOT NULL,
+    -> вид VARCHAR(30) NOT NULL,
+    -> команды VARCHAR(100),
+    -> дата_рождения DATE
+    -> ;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> -- Переносим данные о лошадях и ослах в новую таблицу
+mysql> INSERT INTO `Лошади и ослы` (имя, вид, команды, дата_рождения)
+    -> SELECT имя, вид, команды, дата_рождения 
+    -> FROM `Вьючные животные` 
+    -> WHERE вид IN ('Лошадь', 'Осел');
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> -- Проверяем содержимое новой таблицы
+mysql> SELECT * FROM `Лошади и ослы`;
++----+----------+--------+--------------------------+---------------+
+| id | имя      | вид    | команды                  | дата_рождения |
++----+----------+--------+--------------------------+---------------+
+|  1 | Буян     | Лошадь | Шагом, Рысью, Галопом    | 2018-04-22    |
+|  2 | Упрямец  | Осел   | NULL                     | 2022-01-18    |
++----+----------+--------+--------------------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> -- Удаляем старую таблицу Вьючные животные
+mysql> DROP TABLE `Вьючные животные`;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> -- Проверяем оставшиеся таблицы в базе данных
+mysql> SHOW TABLES;
++-----------------------------+
+| Tables_in_Друзья человека   |
++-----------------------------+
+| Домашние животные           |
+| Лошади и ослы               |
++-----------------------------+
+2 rows in set (0.00 sec)
+
+mysql> exit
+Bye
+db@db-VirtualBox:~$ 
