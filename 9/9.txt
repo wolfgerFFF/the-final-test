@@ -1,0 +1,86 @@
+db@db-VirtualBox:~$ mysql -u root -p Друзья\ человека
+Enter password: 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 47
+Server version: 8.0.37-0ubuntu0.24.04.1 (Ubuntu)
+
+mysql> ALTER TABLE `Домашние животные`
+    -> ADD COLUMN `имя` VARCHAR(30) AFTER `id`,
+    -> ADD COLUMN `дата_рождения` DATE AFTER `команды`;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE `Вьючные животные`
+    -> ADD COLUMN `имя` VARCHAR(30) AFTER `id`,
+    -> ADD COLUMN `дата_рождения` DATE AFTER `команды`;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> UPDATE `Домашние животные` SET
+    -> `имя` = 'Бобик',
+    -> `дата_рождения` = '2020-05-15'
+    -> WHERE id = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE `Домашние животные` SET
+    -> `имя` = 'Мурка',
+    -> `дата_рождения` = '2021-02-28'
+    -> WHERE id = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE `Домашние животные` SET
+    -> `имя` = 'Хома',
+    -> `дата_рождения` = '2023-07-10'
+    -> WHERE id = 3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE `Вьючные животные` SET
+    -> `имя` = 'Буян',
+    -> `дата_рождения` = '2018-04-22'
+    -> WHERE id = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE `Вьючные животные` SET
+    -> `имя` = 'Горбун',
+    -> `дата_рождения` = '2019-11-03'
+    -> WHERE id = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE `Вьючные животные` SET
+    -> `имя` = 'Упрямец',
+    -> `дата_рождения` = '2022-01-18'
+    -> WHERE id = 3;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> SELECT * FROM `Домашние животные`;
++----+--------+----------------+--------------------------+---------------+
+| id | имя    | вид            | команды                  | дата_рождения |
++----+--------+----------------+--------------------------+---------------+
+|  1 | Бобик  | Собака         | Сидеть, Лежать, Голос    | 2020-05-15    |
+|  2 | Мурка  | Кошка          | Кис-кис                  | 2021-02-28    |
+|  3 | Хома   | Хомяк          | NULL                     | 2023-07-10    |
++----+--------+----------------+--------------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM `Вьючные животные`;
++----+----------+----------------+--------------------------+---------------+
+| id | имя      | вид            | команды                  | дата_рождения |
++----+----------+----------------+--------------------------+---------------+
+|  1 | Буян     | Лошадь         | Шагом, Рысью, Галопом    | 2018-04-22    |
+|  2 | Горбун   | Верблюд        | Вперед, Стоять           | 2019-11-03    |
+|  3 | Упрямец  | Осел           | NULL                     | 2022-01-18    |
++----+----------+----------------+--------------------------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> exit
+Bye
+db@db-VirtualBox:~$ 
