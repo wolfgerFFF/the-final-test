@@ -1,1 +1,174 @@
+PC C:\Users\Wolfger> ssh db@192.168.100.4
+db@192.168.100.4's password: 
+Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-39-generic x86_64)
 
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+Last login: Wed Mar  5 09:15:22 2025 from 192.168.100.2
+db@db-VirtualBox:~$ pwd
+/home/db
+db@db-VirtualBox:~$ mkdir Животные
+db@db-VirtualBox:~$ cd Животные/
+db@db-VirtualBox:~/Животные$ ll
+total 8
+drwxrwxr-x  2 db db 4096 Mar  5 09:16 ./
+drwxr-xr-x 20 db db 4096 Mar  5 09:16 ../
+
+1. Создаем и заполняем файлы:
+db@db-VirtualBox:~/Животные$ cat > "Домашние животные"
+собаки
+кошки
+хомяки
+db@db-VirtualBox:~/Животные$ cat > "Вьючные животные"
+лошади
+верблюды
+ослы
+db@db-VirtualBox:~/Животные$ ll
+total 24
+drwxrwxr-x  2 db db 4096 Mar  5 09:17 ./
+drwxr-xr-x 20 db db 4096 Mar  5 09:16 ../
+-rw-rw-r--  1 db db   21 Mar  5 09:17 'Домашние животные'
+-rw-rw-r--  1 db db   20 Mar  5 09:17 'Вьючные животные'
+
+2. Объединяем файлы:
+db@db-VirtualBox:~/Животные$ cat "Домашние животные" "Вьючные животные" > animals
+db@db-VirtualBox:~/Животные$ cat animals
+собаки
+кошки
+хомяки
+лошади
+верблюды
+ослы
+db@db-VirtualBox:~/Животные$ mv animals "Друзья человека"
+db@db-VirtualBox:~/Животные$ ll
+total 32
+drwxrwxr-x  2 db db 4096 Mar  5 09:18 ./
+drwxr-xr-x 20 db db 4096 Mar  5 09:16 ../
+-rw-rw-r--  1 db db   41 Mar  5 09:18 'Друзья человека'
+-rw-rw-r--  1 db db   21 Mar  5 09:17 'Домашние животные'
+-rw-rw-r--  1 db db   20 Mar  5 09:17 'Вьючные животные'
+
+3. Установка MySQL:
+db@db-VirtualBox:~/Животные$ cd ~
+db@db-VirtualBox:~$ sudo apt-get update
+[sudo] password for db: 
+Hit:1 http://ru.archive.ubuntu.com/ubuntu noble InRelease
+Get:2 http://ru.archive.ubuntu.com/ubuntu noble-updates InRelease [198 kB]
+Get:3 http://security.ubuntu.com/ubuntu noble-security InRelease [198 kB]
+Get:4 http://ru.archive.ubuntu.com/ubuntu noble-backports InRelease [198 kB]
+Get:5 http://repo.mysql.com/apt/ubuntu noble InRelease [3.8 kB]
+Get:6 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 Packages [12.9 kB]
+Fetched 610 kB in 1s (590 kB/s)                           
+Reading package lists... Done
+db@db-VirtualBox:~$ wget https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb
+--2025-03-05 09:19:42--  https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb
+Resolving dev.mysql.com (dev.mysql.com)... 23.211.15.42
+Connecting to dev.mysql.com (dev.mysql.com)|23.211.15.42|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://repo.mysql.com//mysql-apt-config_0.8.30-1_all.deb [following]
+--2025-03-05 09:19:43--  https://repo.mysql.com//mysql-apt-config_0.8.30-1_all.deb
+Resolving repo.mysql.com (repo.mysql.com)... 23.211.15.42
+Connecting to repo.mysql.com (repo.mysql.com)|23.211.15.42|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 22080 (22K) [application/x-deb]
+Saving to: 'mysql-apt-config_0.8.30-1_all.deb'
+
+mysql-apt-config_0.8.30-1_all.deb 100%[=========================================>]  21.56K  --.-KB/s    in 0.001s  
+
+2025-03-05 09:19:43 (16.2 MB/s) - 'mysql-apt-config_0.8.30-1_all.deb' saved [22080/22080]
+
+db@db-VirtualBox:~$ sudo dpkg -i mysql-apt-config_0.8.30-1_all.deb
+Selecting previously unselected package mysql-apt-config.
+(Reading database ... 215423 files and directories currently installed.)
+Preparing to unpack mysql-apt-config_0.8.30-1_all.deb ...
+Unpacking mysql-apt-config (0.8.30-1) ...
+Setting up mysql-apt-config (0.8.30-1) ...
+db@db-VirtualBox:~$ sudo apt-get install mysql-server
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following additional packages will be installed:
+  libaio1 libcgi-fast-perl libcgi-pm-perl libencode-locale-perl libfcgi-perl
+  libhtml-parser-perl libhtml-tagset-perl libhtml-template-perl libhttp-date-perl
+  libhttp-message-perl libio-html-perl liblwp-mediatypes-perl libtimedate-perl
+  liburi-perl mysql-client mysql-common mysql-community-client mysql-community-client-core
+  mysql-community-server mysql-community-server-core
+Suggested packages:
+  libipc-sharedcache-perl mailx tinyca
+The following NEW packages will be installed:
+  libaio1 libcgi-fast-perl libcgi-pm-perl libencode-locale-perl libfcgi-perl
+  libhtml-parser-perl libhtml-tagset-perl libhtml-template-perl libhttp-date-perl
+  libhttp-message-perl libio-html-perl liblwp-mediatypes-perl libtimedate-perl
+  liburi-perl mysql-client mysql-common mysql-community-client mysql-community-client-core
+  mysql-community-server mysql-community-server-core mysql-server
+0 upgraded, 21 newly installed, 0 to remove and 3 not upgraded.
+Need to get 26.5 MB of archives.
+After this operation, 244 MB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-common amd64 8.0.37-1ubuntu24.04 [91.1 kB]
+Get:2 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-community-client-core amd64 8.0.37-1ubuntu24.04 [1,907 kB]
+Get:3 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-community-client amd64 8.0.37-1ubuntu24.04 [2,525 kB]
+Get:4 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-client amd64 8.0.37-1ubuntu24.04 [67.5 kB]
+Get:5 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-community-server-core amd64 8.0.37-1ubuntu24.04 [19.8 MB]
+Get:6 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-community-server amd64 8.0.37-1ubuntu24.04 [2,481 kB]
+Get:7 http://repo.mysql.com/apt/ubuntu noble/mysql-8.0 amd64 mysql-server amd64 8.0.37-1ubuntu24.04 [21.4 kB]
+Fetched 26.5 MB in 5s (5,521 kB/s)                                              
+Selecting previously unselected package mysql-common.
+(Reading database ... 215423 files and directories currently installed.)
+Preparing to unpack .../00-mysql-common_8.0.37-1ubuntu24.04_amd64.deb ...
+Unpacking mysql-common (8.0.37-1ubuntu24.04) ...
+...
+Setting up mysql-server (8.0.37-1ubuntu24.04) ...
+
+4. Установка и удаление Chrome:
+db@db-VirtualBox:~$ wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+--2025-03-05 09:25:12--  https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+Resolving dl.google.com (dl.google.com)... 142.250.185.78, 2a00:1450:4010:c0f::8e
+Connecting to dl.google.com (dl.google.com)|142.250.185.78|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 85314904 (81M) [application/x-deb]
+Saving to: 'google-chrome-stable_current_amd64.deb'
+
+google-chrome-stable_current_amd64.deb 100%[=========================================>]  81.37M  12.1MB/s    in 7.4s    
+
+2025-03-05 09:25:20 (11.0 MB/s) - 'google-chrome-stable_current_amd64.deb' saved [85314904/85314904]
+
+db@db-VirtualBox:~$ sudo dpkg -i google-chrome-stable_current_amd64.deb
+Selecting previously unselected package google-chrome-stable.
+(Reading database ... 216342 files and directories currently installed.)
+Preparing to unpack google-chrome-stable_current_amd64.deb ...
+Unpacking google-chrome-stable (116.0.5845.179-1) ...
+Setting up google-chrome-stable (116.0.5845.179-1) ...
+update-alternatives: using /usr/bin/google-chrome-stable to provide /usr/bin/x-www-browser (x-www-browser) in auto mode
+update-alternatives: using /usr/bin/google-chrome-stable to provide /usr/bin/gnome-www-browser (gnome-www-browser) in auto mode
+update-alternatives: using /usr/bin/google-chrome-stable to provide /usr/bin/google-chrome (google-chrome) in auto mode
+db@db-VirtualBox:~$ sudo dpkg -r google-chrome-stable
+(Reading database ... 216350 files and directories currently installed.)
+Removing google-chrome-stable (116.0.5845.179-1) ...
+Processing triggers for desktop-file-utils (0.26-1ubuntu3) ...
+Processing triggers for man-db (2.11.2-2) ...
+
+5. История команд:
+db@db-VirtualBox:~$ history
+    1  mkdir Животные
+    2  cd Животные/
+    3  cat > "Домашние животные"
+    4  cat > "Вьючные животные"
+    5  cat "Домашние животные" "Вьючные животные" > animals
+    6  mv animals "Друзья человека"
+    7  cd ~
+    8  sudo apt-get update
+    9  wget https://dev.mysql.com/get/mysql-apt-config_0.8.30-1_all.deb
+   10  sudo dpkg -i mysql-apt-config_0.8.30-1_all.deb
+   11  sudo apt-get install mysql-server
+   12  wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+   13  sudo dpkg -i google-chrome-stable_current_amd64.deb
+   14  sudo dpkg -r google-chrome-stable
+   15  history
+db@db-VirtualBox:~$ exit
+logout
+Connection to 192.168.100.4 closed.
+PC C:\Users\Wolfger>
+```
