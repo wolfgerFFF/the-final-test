@@ -60,7 +60,7 @@ mysql> CREATE TABLE Лошади (
     -> ;
 Query OK, 0 rows affected (0.03 sec)
 
-mysql> -- Показываем созданные таблицы
+mysql> --Созданные таблицы
 mysql> SHOW TABLES;
 +-----------------------------+
 | Tables_in_Друзья человека   |
